@@ -1,0 +1,102 @@
+* {
+  box-sizing: border-box;
+  padding: 0px;
+  margin: 0px;
+  font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
+}
+
+html {
+  height: calc(100% -100px);
+}
+
+body {
+  height: 100%;
+  background: linear-gradient(
+    135deg,
+    rgba(32, 40, 172, 1) 0%,
+    rgba(126, 22, 149, 1) 100%
+  );
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+#card {
+  display: flex;
+  flex-direction: column;
+  width: 450px;
+  padding: 25px 25px 63px 25px;
+  margin: 100px auto 0px;
+  background-color: white;
+  border-radius: 10px;
+}
+
+#card .header {
+  color: rgb(0, 0, 98);
+}
+
+#card .header .title {
+  font-size: 22px;
+}
+
+#card .header i {
+  font-size: 22px;
+  margin-left: 10px;
+}
+
+#card .todo {
+  margin-top: 20px;
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+#card .todo input {
+  outline: none;
+  border: none;
+  padding: 20px 140px 20px 25px;
+  width: 400px;
+  background-color: #ddd;
+  border-radius: 50px;
+  font-size: 16px;
+  color: #333;
+}
+
+#card .todo button {
+  outline: none;
+  border: none;
+  width: 120px;
+  height: 58px;
+  border-radius: 50px;
+  background-color: rgb(255, 116, 66);
+  color: white;
+  position: absolute;
+  right: 0px;
+  cursor: pointer;
+}
+
+#card .taskList .task {
+  display: flex;
+  padding: 20px;
+  align-items: center;
+  position: relative;
+  color: #333;
+}
+
+#card .taskList .task .index {
+  padding: 5px;
+  position: absolute;
+  left: 0;
+}
+
+#card .taskList .task p {
+  max-width: 330px;
+  word-wrap: break-word;
+  margin-left: 10px;
+}
+
+#card .taskList .task .del {
+  position: absolute;
+  right: 0;
+  padding: 5px;
+  cursor: pointer;
+}
