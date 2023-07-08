@@ -86,6 +86,7 @@ body {
   padding: 5px;
   position: absolute;
   left: 0;
+  transition: 0.3s;
 }
 
 #card .taskList .task p {
