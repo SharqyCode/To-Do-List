@@ -4,15 +4,56 @@ let taskList = document.querySelector(".taskList");
 let myInput = document.querySelector("input");
 let addButton = document.querySelector("button");
 
-// Display tasks saved in storage
-getSavedTasks();
+// Display tasks saved in storage when page is loaded
+window.addEventListener("load", () => {
+  getSavedTasks();
+});
 
-// Display entered task and save to storage
+// Enter task by clicking the mouse
 addButton.addEventListener("click", () => enterTask());
 
+// Enter task by pressing Enter
 document.addEventListener("keydown", (e) => {
   if (e.key == "Enter") {
     enterTask();
+  }
+});
+
+// Delete task through delete button
+document.addEventListener("click", (e) => {
+  if (e.target.classList.contains("del")) {
+    let delTask = e.target.parentElement.children[1];
+    e.target.parentElement.remove();
+
+    // let taskArray = window.localStorage.getItem("tasks").split("|");
+    // taskArray.splice(taskArray.indexOf(delText), 1);
+    // let newArr = taskArray.join("|");
+    // window.localStorage.setItem("tasks", newArr);
+    removeFromLs("tasks", delTask);
+
+    if (e.target.parentElement.classList.contains("checked")) {
+      removeFromLs("checked", e.target.parentElement);
+    }
+  }
+  if (taskList.childElementCount == 0) {
+    card.style.paddingBottom = "63px";
+  }
+});
+
+// Mark as done
+taskList.addEventListener("click", (e) => {
+  if (
+    e.target.classList.contains("clickTask") &&
+    !e.target.parentElement.classList.contains("checked")
+  ) {
+    checkTask(e.target.parentElement);
+    saveChecked(e.target.parentElement.textContent);
+  } else if (
+    e.target.classList.contains("clickTask") &&
+    e.target.parentElement.classList.contains("checked")
+  ) {
+    uncheckTask(e.target.parentElement);
+    removeFromLs("checked", e.target.parentElement);
   }
 });
 
@@ -32,9 +73,13 @@ function enterTask() {
     let deleteIcon = document.createElement("i");
     deleteIcon.classList.add("fa-solid", "fa-xmark", "del");
 
+    let clickSpace = document.createElement("div");
+    clickSpace.classList.add("clickTask");
+
     newTaskDiv.appendChild(taskIcon);
     newTaskDiv.appendChild(newTask);
     newTaskDiv.appendChild(deleteIcon);
+    newTaskDiv.appendChild(clickSpace);
 
     taskList.prepend(newTaskDiv);
     saveTask(taskText);
@@ -59,7 +104,25 @@ function saveTask(text) {
   }
 }
 
-// Save checkedIndex To Local Storage
+// Add checked class and attributes
+function checkTask(target) {
+  target.children[0].classList.remove("fa-circle", "fa-regular");
+  target.children[0].classList.add("fa-circle-check", "fa-solid");
+  target.children[0].style.color = "rgb(255, 116, 66)";
+  target.children[1].style.textDecorationLine = "line-through";
+  target.classList.add("checked");
+}
+
+// Remove checked class and attributes
+function uncheckTask(target) {
+  target.children[0].classList.remove("fa-circle-check", "fa-solid");
+  target.children[0].classList.add("fa-circle", "fa-regular");
+  target.children[0].style.color = "#333";
+  target.children[1].style.textDecorationLine = "none";
+  target.classList.remove("checked");
+}
+
+// Save checked textContent To Local Storage
 function saveChecked(num) {
   if (window.localStorage.getItem("checked")) {
     window.localStorage.setItem(
@@ -78,36 +141,34 @@ function getSavedTasks() {
     for (let i = 0; i < taskArray.length; i++) {
       let newTaskDiv = document.createElement("div");
       newTaskDiv.classList.add("task");
+
       let newTask = document.createElement("p");
       newTask.textContent = taskArray[i];
+
       let taskIcon = document.createElement("i");
       taskIcon.classList.add("fa-regular", "fa-circle", "index");
+
       let deleteIcon = document.createElement("i");
       deleteIcon.classList.add("fa-solid", "fa-xmark", "del");
+
+      let clickSpace = document.createElement("div");
+      clickSpace.classList.add("clickTask");
+
       newTaskDiv.appendChild(taskIcon);
       newTaskDiv.appendChild(newTask);
       newTaskDiv.appendChild(deleteIcon);
+      newTaskDiv.appendChild(clickSpace);
 
       taskList.prepend(newTaskDiv);
     }
     // Add checked attributes to checked tasks
     if (window.localStorage.getItem("checked")) {
       let checkedArr = window.localStorage.getItem("checked").split("|");
+      // console.log(checkedArr);
       for (let i = 0; i < taskArray.length; i++) {
-        if (checkedArr.includes(taskArray[i])) {
-          // console.log(i);
-          taskList.children[i].children[0].classList.remove(
-            "fa-circle",
-            "fa-regular"
-          );
-          taskList.children[i].children[0].classList.add(
-            "fa-circle-check",
-            "fa-solid"
-          );
-          taskList.children[i].children[0].style.color = "rgb(255, 116, 66)";
-          taskList.children[i].children[1].style.textDecorationLine =
-            "line-through";
-          taskList.children[i].classList.add("checked");
+        if (checkedArr.includes(taskList.children[i].textContent)) {
+          let currentTask = taskList.children[i];
+          checkTask(currentTask);
         }
       }
     }
@@ -116,63 +177,10 @@ function getSavedTasks() {
   }
 }
 
-// Delete task through delete button
-document.addEventListener("click", (e) => {
-  if (e.target.classList.contains("del")) {
-    let delText = e.target.parentElement.children[1].textContent;
-    e.target.parentElement.remove();
-
-    let taskArray = window.localStorage.getItem("tasks").split("|");
-    taskArray.splice(taskArray.indexOf(delText), 1);
-    let newArr = taskArray.join("|");
-    window.localStorage.setItem("tasks", newArr);
-
-    if (e.target.parentElement.classList.contains("checked")) {
-      let checkedArr = window.localStorage.getItem("checked").split("|");
-      checkedArr.splice(
-        checkedArr.indexOf(e.target.parentElement.textContent),
-        1
-      );
-      let newArr2 = checkedArr.join("|");
-      window.localStorage.setItem("checked", newArr2);
-    }
-  }
-  if (taskList.childElementCount == 0) {
-    card.style.paddingBottom = "63px";
-  }
-});
-
-// Mark as done
-document.addEventListener("click", (e) => {
-  let tasks = document.querySelectorAll(".task");
-  tasks = Array.from(tasks);
-
-  if (
-    e.target.classList.contains("task") &&
-    !e.target.classList.contains("checked")
-  ) {
-    e.target.children[0].classList.remove("fa-circle", "fa-regular");
-    e.target.children[0].classList.add("fa-circle-check", "fa-solid");
-    e.target.children[0].style.color = "rgb(255, 116, 66)";
-    e.target.children[1].style.textDecorationLine = "line-through";
-    e.target.classList.add("checked");
-
-    saveChecked(e.target.textContent);
-  } else if (
-    e.target.classList.contains("task") &&
-    e.target.classList.contains("checked")
-  ) {
-    e.target.children[0].classList.remove("fa-circle-check", "fa-solid");
-    e.target.children[0].classList.add("fa-circle", "fa-regular");
-    e.target.children[0].style.color = "#333";
-    e.target.children[1].style.textDecorationLine = "none";
-    e.target.classList.remove("checked");
-
-    let checkedArr = window.localStorage.getItem("checked").split("|");
-    checkedArr.splice(checkedArr.indexOf(e.target.textContent), 1);
-    let newArr = checkedArr.join("|");
-    window.localStorage.setItem("checked", newArr);
-  }
-});
-
-// window.localStorage.clear();
+// Remove item from Local Storage using target
+function removeFromLs(item, target) {
+  let lsArray = window.localStorage.getItem(`${item}`).split("|");
+  lsArray.splice(lsArray.indexOf(target.textContent), 1);
+  let newArr = lsArray.join("|");
+  window.localStorage.setItem(`${item}`, newArr);
+}
