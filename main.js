@@ -24,11 +24,6 @@ document.addEventListener("click", (e) => {
   if (e.target.classList.contains("del")) {
     let delTask = e.target.parentElement.children[1];
     e.target.parentElement.remove();
-
-    // let taskArray = window.localStorage.getItem("tasks").split("|");
-    // taskArray.splice(taskArray.indexOf(delText), 1);
-    // let newArr = taskArray.join("|");
-    // window.localStorage.setItem("tasks", newArr);
     removeFromLs("tasks", delTask);
 
     if (e.target.parentElement.classList.contains("checked")) {
@@ -57,31 +52,36 @@ taskList.addEventListener("click", (e) => {
   }
 });
 
+// Create task
+function newTask(taskText) {
+  let newTaskDiv = document.createElement("div");
+  newTaskDiv.classList.add("task");
+
+  let newTask = document.createElement("p");
+  newTask.textContent = taskText;
+
+  let taskIcon = document.createElement("i");
+  taskIcon.classList.add("fa-regular", "fa-circle", "index");
+
+  let deleteIcon = document.createElement("i");
+  deleteIcon.classList.add("fa-solid", "fa-xmark", "del");
+
+  let clickSpace = document.createElement("div");
+  clickSpace.classList.add("clickTask");
+
+  newTaskDiv.appendChild(taskIcon);
+  newTaskDiv.appendChild(newTask);
+  newTaskDiv.appendChild(deleteIcon);
+  newTaskDiv.appendChild(clickSpace);
+
+  taskList.prepend(newTaskDiv);
+}
+
 // Enter task
 function enterTask() {
   let taskText = myInput.value;
   if (taskText != "") {
-    let newTaskDiv = document.createElement("div");
-    newTaskDiv.classList.add("task");
-
-    let newTask = document.createElement("p");
-    newTask.textContent = taskText;
-
-    let taskIcon = document.createElement("i");
-    taskIcon.classList.add("fa-regular", "fa-circle", "index"); //<i class="fa-regular fa-circle"></i>
-
-    let deleteIcon = document.createElement("i");
-    deleteIcon.classList.add("fa-solid", "fa-xmark", "del");
-
-    let clickSpace = document.createElement("div");
-    clickSpace.classList.add("clickTask");
-
-    newTaskDiv.appendChild(taskIcon);
-    newTaskDiv.appendChild(newTask);
-    newTaskDiv.appendChild(deleteIcon);
-    newTaskDiv.appendChild(clickSpace);
-
-    taskList.prepend(newTaskDiv);
+    newTask(taskText);
     saveTask(taskText);
 
     myInput.value = "";
@@ -139,27 +139,7 @@ function getSavedTasks() {
   if (window.localStorage.getItem("tasks")) {
     let taskArray = window.localStorage.getItem("tasks").split("|");
     for (let i = 0; i < taskArray.length; i++) {
-      let newTaskDiv = document.createElement("div");
-      newTaskDiv.classList.add("task");
-
-      let newTask = document.createElement("p");
-      newTask.textContent = taskArray[i];
-
-      let taskIcon = document.createElement("i");
-      taskIcon.classList.add("fa-regular", "fa-circle", "index");
-
-      let deleteIcon = document.createElement("i");
-      deleteIcon.classList.add("fa-solid", "fa-xmark", "del");
-
-      let clickSpace = document.createElement("div");
-      clickSpace.classList.add("clickTask");
-
-      newTaskDiv.appendChild(taskIcon);
-      newTaskDiv.appendChild(newTask);
-      newTaskDiv.appendChild(deleteIcon);
-      newTaskDiv.appendChild(clickSpace);
-
-      taskList.prepend(newTaskDiv);
+      newTask(taskArray[i]);
     }
     // Add checked attributes to checked tasks
     if (window.localStorage.getItem("checked")) {
