@@ -80,24 +80,44 @@ body {
   align-items: center;
   position: relative;
   color: #333;
+  margin-top: 10px;
+  margin-bottom: 5px;
+  border-radius: 50px;
+}
+
+#card .taskList .task.checked {
+  background-color: #eee;
+  transition: 0.3s;
 }
 
 #card .taskList .task .index {
   padding: 5px;
   position: absolute;
-  left: 0;
+  left: 10px;
   transition: 0.3s;
 }
 
 #card .taskList .task p {
-  max-width: 330px;
+  max-width: 325px;
   word-wrap: break-word;
-  margin-left: 10px;
+  margin-left: 20px;
 }
 
 #card .taskList .task .del {
   position: absolute;
-  right: 0;
+  right: 10px;
   padding: 5px;
+  cursor: pointer;
+  z-index: 10;
+}
+
+#card .taskList .task .clickTask {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: transparent;
+  z-index: 5;
   cursor: pointer;
 }
