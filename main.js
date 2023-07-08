@@ -94,8 +94,8 @@ function getSavedTasks() {
     if (window.localStorage.getItem("checked")) {
       let checkedArr = window.localStorage.getItem("checked").split("|");
       for (let i = 0; i < taskArray.length; i++) {
-        if (checkedArr.includes(String(i))) {
-          console.log(i);
+        if (checkedArr.includes(taskArray[i])) {
+          // console.log(i);
           taskList.children[i].children[0].classList.remove(
             "fa-circle",
             "fa-regular"
@@ -127,10 +127,15 @@ document.addEventListener("click", (e) => {
     let newArr = taskArray.join("|");
     window.localStorage.setItem("tasks", newArr);
 
-    let checkedArr = window.localStorage.getItem("checked").split("|");
-    checkedArr.splice(checkedArr.indexOf(e.target), 1);
-    let newArr2 = checkedArr.join("|");
-    window.localStorage.setItem("checked", newArr2);
+    if (e.target.parentElement.classList.contains("checked")) {
+      let checkedArr = window.localStorage.getItem("checked").split("|");
+      checkedArr.splice(
+        checkedArr.indexOf(e.target.parentElement.textContent),
+        1
+      );
+      let newArr2 = checkedArr.join("|");
+      window.localStorage.setItem("checked", newArr2);
+    }
   }
   if (taskList.childElementCount == 0) {
     card.style.paddingBottom = "63px";
@@ -152,7 +157,7 @@ document.addEventListener("click", (e) => {
     e.target.children[1].style.textDecorationLine = "line-through";
     e.target.classList.add("checked");
 
-    saveChecked(tasks.indexOf(e.target));
+    saveChecked(e.target.textContent);
   } else if (
     e.target.classList.contains("task") &&
     e.target.classList.contains("checked")
@@ -164,7 +169,7 @@ document.addEventListener("click", (e) => {
     e.target.classList.remove("checked");
 
     let checkedArr = window.localStorage.getItem("checked").split("|");
-    checkedArr.splice(checkedArr.indexOf(e.target), 1);
+    checkedArr.splice(checkedArr.indexOf(e.target.textContent), 1);
     let newArr = checkedArr.join("|");
     window.localStorage.setItem("checked", newArr);
   }
